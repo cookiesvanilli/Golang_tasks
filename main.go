@@ -3,144 +3,105 @@ package main
 import "fmt"
 
 func main() {
-	arrays()
-	slices()
-	slices2()
-	appendSlice()
-	copySlice()
-	map1()
-	map2()
-	map3()
-	map4()
-	task1()
+	averageTotal()
+	ff()
+	returned()
+	close()
+	close2()
+	generator()
+	recursion()
+	panick()
+	panick2()
 }
-func arrays() {
-	x := [5]float64{
-		98,
-		93,
-		77,
-		82,
-		83,
+func average(xs []float64) float64 {
+	total := 0.0
+	for _, v := range xs {
+		total += v
 	}
-
-	var total float64 = 0
-	for _, value := range x {
-		total += value
-	}
-	fmt.Println(total / float64(len(x)))
+	return total / float64(len(xs))
 }
-func slices() {
-	x := make([]float64, 5, 10)
-	fmt.Println(x)
-}
-func slices2() {
-	arr := [5]float64{1,2,3,4,5}
-	x := arr[0:5]
-	fmt.Println(x)
-}
-//append
-func appendSlice() {
-	slice1 := []int{1,2,3}
-	slice2 := append(slice1, 4, 5)
-	fmt.Println(slice1, slice2)
-}
-//copy
-func copySlice() {
-	slice1 := []int{1,2,3}
-	slice2 := make([]int, 2)
-	copy(slice2, slice1)
-	fmt.Println(slice1, slice2)
+func averageTotal() {
+	someOtherName := []float64{98,93,77,82,83}
+	fmt.Println(average(someOtherName))
 }
 
-// map - ассоциативный массив
-func map1() {
-	x:= make( map[string]int) //«x — это карта string-ов для int-ов»
-	x["key"] = 10
-	fmt.Println(x["key"])
+func ff() {
+	fmt.Println(f1())
 }
-func map2() {
-	x:= make( map[int]int)
-	x[1] = 10
-	fmt.Println(x[1])
+func f1() int {
+	return f2()
 }
-func map3() {
-	elements := make(map[string]string)
-	elements["H"] = "Hydrogen"
-	elements["He"] = "Helium"
-	elements["Li"] = "Lithium"
-	elements["Be"] = "Beryllium"
-	elements["B"] = "Boron"
-	elements["C"] = "Carbon"
-	elements["N"] = "Nitrogen"
-	elements["O"] = "Oxygen"
-	elements["F"] = "Fluorine"
-	elements["Ne"] = "Neon"
-	fmt.Println(elements["Li"])
-	fmt.Println(elements["Un"]) // 0 или пустота
-	if name, ok := elements["Un"]; ok {
-		fmt.Println(name, ok)
-	}
+func f2() int {
+	return 1
 }
-func map4() {
-	elements := map[string]map[string]string{
-		"H": map[string]string{
-			"name":"Hydrogen",
-			"state":"gas",
-		},
-		"He": map[string]string{
-			"name":"Helium",
-			"state":"gas",
-		},
-		"Li": map[string]string{
-			"name":"Lithium",
-			"state":"solid",
-		},
-		"Be": map[string]string{
-			"name":"Beryllium",
-			"state":"solid",
-		},
-		"B":  map[string]string{
-			"name":"Boron",
-			"state":"solid",
-		},
-		"C":  map[string]string{
-			"name":"Carbon",
-			"state":"solid",
-		},
-		"N":  map[string]string{
-			"name":"Nitrogen",
-			"state":"gas",
-		},
-		"O":  map[string]string{
-			"name":"Oxygen",
-			"state":"gas",
-		},
-		"F":  map[string]string{
-			"name":"Fluorine",
-			"state":"gas",
-		},
-		"Ne":  map[string]string{
-			"name":"Neon",
-			"state":"gas",
-		},
-	}
 
-	if el, ok := elements["Li"]; ok {
-		fmt.Println(el["name"], el["state"])
+func f() (x int, err int) {
+	return 5, 6
+}
+func returned() {
+	x, err := f()
+	fmt.Println(x, err)
+}
+// Замыкания ------------------------->
+func close() {
+	add := func(x, y int) int {
+		return x+y
+	}
+	fmt.Println(add(1,1))
+}
+func close2() {
+	x := 0
+	increment := func() int {
+		x++
+		return x
+	}
+	fmt.Println(increment())
+	fmt.Println(increment())
+}
+func makeEvenGenerator() func() uint {
+	i := uint(0)
+	return func() (ret uint) {
+		ret = i
+		i += 2
+		return
 	}
 }
-func task1() {
-	x := []int{
-		48,96,86,68,
-		57,82,63,70,
-		37,34,83,27,
-		19,97, 9,17,
+func generator() {
+	nextEven := makeEvenGenerator()
+	fmt.Println(nextEven()) // 0
+	fmt.Println(nextEven()) // 2
+	fmt.Println(nextEven()) // 4
+}
+
+//Рекурсия --------------------------->
+func factorial(x uint) uint {
+	if x == 0 {
+		return 1
 	}
-	min := x[0]
-	for  _, a := range x {
-		if (a < min) {
-			min = a
-		}
-	}
-	fmt.Println(min)
+	return x * factorial(x-1)
+}
+func recursion() {
+	x:= uint(5)
+	res := factorial(x)
+	fmt.Println(res)
+}
+
+//Panic ---------------------------->
+func first() {
+	fmt.Println("1st")
+}
+func second() {
+	fmt.Println("2nd")
+}
+func panick() {
+	defer second()
+	first()
+}
+
+func panick2() {
+	defer func() {
+		str := recover()
+		fmt.Println(str)
+	}()
+	panic("PANIC")
 }
